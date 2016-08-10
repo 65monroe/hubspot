@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+test:
+  <<: *default
+  database: hubspot_test_db
+
+development:
+  <<: *default
+  database: <%= ENV["DB"] %>
+
+production:
+  database: <%= ENV["DB"] %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWD"] %>
+  port: <%= ENV["DB_PORT"] %>
+  host: <%= ENV["DB_HOST"] %>

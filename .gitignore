@@ -1,1 +1,9 @@
 .env
+config/database.yml
+!config/database.yml.example
+config/deploy/*
+log/*
+
+spec/.DS_Store
+.DS_Store
+coverage/

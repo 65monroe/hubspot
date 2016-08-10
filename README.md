@@ -1,28 +1,16 @@
-## Local Setup
+[![Code Climate](https://codeclimate.com/github/dvmonroe/hubspot/badges/gpa.svg)](https://codeclimate.com/github/dvmonroe/hubspot)
+[![Build Status](https://travis-ci.org/dvmonroe/hubspot.svg?branch=master)](https://travis-ci.org/dvmonroe/hubspot)
 
-create a file named .env at the root of this directory && insert:
-
+## Run Locally
 ```sh
-API_KEY= { your api key }
-DEAL_URL=https://api.hubapi.com/deals/v1/deal/recent/modified?
-CONTACT_URL=https://api.hubapi.com/contacts/v1/lists/all/contacts/all?
-OWNER_URL=https://api.hubapi.com/owners/v2/owners/?
-COMPANY_URL=https://api.hubapi.com/companies/v2/companies/recent/modified?
-ENGAGEMENT_URL=https://api.hubapi.com/engagements/v1/engagements/recent/modified?
-
+$ bin/setup
+$ bin/run
+# if you get a permission denied error on either cmd run chmod +x  bin/setup || chmod +x bin/run
 ```
 
-## To Run
-```sh
-$ gem install bundle
-$ bundle install
-$ rake db:create && rake db:migrate
-$ ./bin/run
-```
+## To bebug or to access local data
 
-## To bebug or to access local db
-
-loading in irb: 
+loading in irb:
 ```sh
 $ irb
 2.3.1 :001 > load 'config.rb'
@@ -35,13 +23,19 @@ To see all possible rake commands
 $ rake -T
 ```
 
+# Design Notes
 
-Transfered the repo to dvmonroe, to fix your remote run: 
+## Database
+You'll notice we've overridden the `id` on multiple tables.  This is so that we don't get the auto generated incremenetal `id` that you'd get with a sql db. We want the `id` of the table record to be that of the hubspot record `id`.  If for some reason we don't get an `id` from hubspot for the record we don't want it to save with an auto generated `id`.
 
-```sh
-$ git remote remove origin  
-$ git remote add origin git@github.com:dvmonroe/hubspot.git
+So that `id` can still be our primary key we ensured that null is false and added a unique index to the `id` column.
 
-```
+## Deployment
+You'll need to add a `deploy` dir to `config/` and add a `production.rb` file in that dir.  You'll need to add at the very least the server for which you're deploying to (See capistrano docs for examples).
 
-after that you should be good to pull as needed
+## Future Improvements
+1. Add specs
+2. Add more of our records to excel workbook 
+3. Update run time to allow for passable options of what records we want
+4. Consider not dropping entire db on run and instead inserting or updating new or existing records
+5. Run a server to display/visualize records via web client

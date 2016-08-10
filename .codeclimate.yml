@@ -1,0 +1,21 @@
+engines:
+  rubocop:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+ratings:
+  paths:
+  - bin/**
+  - lib/**
+exclude_paths:
+- Gemfile
+- Gemfile.lock
+- config/
+- Capfile
+- README.md
+- Rakefile
+- db/
+- spec/

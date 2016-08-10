@@ -1,8 +1,21 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 require './config'
 
-Api::Companies.new(ENV['COMPANY_URL']).retreive
-Api::Contacts.new(ENV['CONTACT_URL']).retreive
-Api::Deals.new(ENV['DEAL_URL']).retreive
-Api::Engagements.new(ENV['ENGAGEMENT_URL']).retreive
-Api::Owners.new(ENV['OWNER_URL']).retreive
+rake = Rake.application
+rake.init
+rake.load_rakefile
+
+rake['db:drop'].invoke
+rake['db:create'].invoke
+rake['db:migrate'].invoke
+rake['db:seed'].invoke
+
+# TODO: update this to allow for passing of options on run
+
+## THIS ORDER IS IMPORTANT FOR 
+## ASSOCIATIONS AND MASTER TABLE CREATIONS
+%w(Companies Engagements Owners Deals Contacts).each do |hub_data|
+  "Api::#{hub_data}".constantize.new.retreive
+  puts "== #{hub_data} Done =="
+end
